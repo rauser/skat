@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {AngularFirestore} from 'angularfire2/firestore';
+import {VariousProvider} from "../../providers/various/various";
 
 export interface Games{
   id: number,
@@ -24,6 +25,9 @@ export interface Jacks{
   templateUrl: 'sessiondetail.html',
 })
 export class SessiondetailPage {
+
+
+  //TODO: Ramsch implementieren, Reh etc...
 
   session: any = {};
   sessionid: string;
@@ -105,6 +109,7 @@ export class SessiondetailPage {
   constructor(public navCtrl: NavController,
               private fireStore: AngularFirestore,
               public alertCtrl: AlertController,
+              public varProv: VariousProvider,
               public navParams: NavParams) {
   }
 
@@ -130,7 +135,9 @@ export class SessiondetailPage {
   }
 
   loadGames(){
-    this.fireStore.collection<any>('sessions/'+this.sessionid+'/games').snapshotChanges().subscribe((res) =>
+    this.fireStore.collection<any>('sessions/'+this.sessionid+'/games',
+        ref => ref.orderBy('datetimeiso','desc'))
+      .snapshotChanges().subscribe((res) =>
       {
         this.pastgames = [];
         console.log(res);
@@ -138,6 +145,22 @@ export class SessiondetailPage {
         for(let game of res){
           this.pastgames.push(game.payload.doc.data());
           this.pastgames[counter].id = game.payload.doc.id;
+          if(this.pastgames[counter].playerid==this.session.player1id){
+            this.pastgames[counter].img = this.session.player1picture;
+            this.pastgames[counter].player = this.session.player1name;
+          }
+          if(this.pastgames[counter].playerid==this.session.player2id){
+            this.pastgames[counter].img = this.session.player2picture;
+            this.pastgames[counter].player = this.session.player2name;
+          }
+          if(this.pastgames[counter].playerid==this.session.player3id){
+            this.pastgames[counter].img = this.session.player3picture;
+            this.pastgames[counter].player = this.session.player3name;
+          }
+          if(this.pastgames[counter].playerid==this.session.player4id){
+            this.pastgames[counter].img = this.session.player4picture;
+            this.pastgames[counter].player = this.session.player4name;
+          }
           counter++;
         }
         console.log(this.pastgames);
@@ -150,6 +173,10 @@ export class SessiondetailPage {
 
   calculatePlayerPoints(){
     this.gamescounter = 0;
+    this.player1points = 0;
+    this.player2points = 0;
+    this.player3points = 0;
+    this.player4points = 0;
     for(let game of this.pastgames){
       if(game.id != 7){
         this.gamescounter++;
@@ -194,6 +221,12 @@ export class SessiondetailPage {
     this.player3selected = false;
     this.player4selected = true;
     this.game.playerid = this.session.player4id;
+  }
+  resetPlayers(){
+    this.player1selected = false;
+    this.player2selected = false;
+    this.player3selected = false;
+    this.player4selected = false;
   }
 
   selectGame(id: number){
@@ -255,10 +288,71 @@ export class SessiondetailPage {
   }
 
   saveGame(){
+    this.calculatePoints();
+    if(this.game.gameid == 7){
+      this.game.points *= -1;
+    }
+    this.game.datetimeiso = new Date().toISOString();
+    this.game.datetime = new Date().toLocaleString('de-DE');
+    console.log(this.game);
+    this.fireStore.collection<any>('sessions/'+this.sessionid+'/games').add(this.game).then(() => {
+      this.varProv.showToast('Spiel gespeichert');
+      this.game.playerid = 0;
+      this.game.player = '';
+      this.game.img = '';
+      this.game.gameid = 0;
+      this.game.game = '';
+      this.game.mit = false;
+      this.game.buben = 0;
+      this.game.multiplier = 0;
+      this.game.value = 0;
+      this.game.points = 0;
+      this.game.hand = false;
+      this.game.schneider = false;
+      this.game.schneiderangesagt = false;
+      this.game.schwarz = false;
+      this.game.schwarzangesagt = false;
+      this.game.offen = false;
+      this.game.lost = false;
+      this.game.datetime = '';
+      this.game.datetimeiso = '';
+      for(let game of this.games)
+        game.selected = false;
+      for(let jack of this.jacks)
+        jack.selected = false;
+      this.resetPlayers();
+    });
   }
 
   showPastGames(){
     this.showpastgames = !this.showpastgames;
+  }
+
+  removeGame(id: string){
+    let alert = this.alertCtrl.create({
+      title: 'Spiel löschen',
+      message: 'Sicher, dass du dieses Spiel löschen willst?',
+      buttons: [
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          handler: () => {
+            console.log('Delete cancelled');
+          }
+        },
+        {
+          text: 'Löschen',
+          handler: () => {
+            console.log('Delete confirmed');
+            this.fireStore.doc<any>('sessions/'+this.sessionid+'/games/'+id).delete().then( () => {
+                this.varProv.showToast('Spiel gelöscht');
+              }
+            )
+          }
+        }
+      ]});
+    alert.present();
+
   }
 
   archiveSession(){

@@ -100,10 +100,10 @@
   <button ion-button full color="danger" *ngIf="showpastgames" (click)="showPastGames()">Spiele verbergen ({{gamescounter}})</button>
   <ion-list *ngIf="this.showpastgames">
     <ion-item *ngFor="let pastgame of this.pastgames" text-wrap>
-      <ion-thumbnail item-start>
+      <ion-avatar item-start>
         <img [src]="pastgame.img">
-      </ion-thumbnail>
-      <h2><b>{{pastgame.game}}: {{pastgame.points}}</b></h2>
+      </ion-avatar>
+      <h2><b>{{pastgame.player}}, {{pastgame.game}}: {{pastgame.points}}</b></h2>
       <p>
         <b *ngIf="pastgame.gameid<6 && pastgame.mit">mit {{pastgame.buben}},</b>
         <b *ngIf="pastgame.gameid<6 && !pastgame.mit">ohne {{pastgame.buben}},</b>
@@ -116,7 +116,7 @@
         <b *ngIf="pastgame.gameid<7 && pastgame.lost">verloren</b>
       </p>
       <p>{{pastgame.datetime}}</p>
-      <ion-icon name="trash" color="danger" item-end (click)="removeGame(pastgame.key)"></ion-icon>
+      <ion-icon name="trash" color="danger" item-end (click)="removeGame(pastgame.id)"></ion-icon>
     </ion-item>
   </ion-list>
 </ion-content>
