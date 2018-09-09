@@ -1,0 +1,7 @@
+{
+  "name": "skat",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
