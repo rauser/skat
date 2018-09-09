@@ -1,19 +1,25 @@
 import { Component } from '@angular/core';
+import { IonicPage, NavController } from 'ionic-angular';
 
-import { AboutPage } from '../about/about';
-import { ContactPage } from '../contact/contact';
-import { HomePage } from '../home/home';
+import {SessionsPage} from "../sessions/sessions";
+import {PlayersPage} from "../players/players";
+import {StatisticsPage} from "../statistics/statistics";
 
+@IonicPage()
 @Component({
+  selector: 'page-tabs',
   templateUrl: 'tabs.html'
 })
 export class TabsPage {
+  tab1Root: any = SessionsPage;
+  tab2Root: any = PlayersPage;
+  tab3Root: any = StatisticsPage;
 
-  tab1Root = HomePage;
-  tab2Root = AboutPage;
-  tab3Root = ContactPage;
+  tab1Title = "Sessions";
+  tab2Title = "Spieler";
+  tab3Title = "Statistiken";
 
-  constructor() {
+  constructor(public navCtrl: NavController) {
 
   }
 }

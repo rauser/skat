@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Sessions</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="newSession()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="logout()">
+        <ion-icon name="log-out"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let session of sessions" (click)="openSession(session.id)" text-wrap>
+      <h2>{{session.name}}</h2>
+      <p>{{session.player1name}}, {{session.player2name}}, {{session.player3name}}, {{session.player4name}}</p>
+      <p>Angelegt am <b>{{session.date}}</b></p>
+    </ion-item>
+  </ion-list>
+</ion-content>

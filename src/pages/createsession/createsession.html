@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Neue Session</ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="cancel()">
+        <span color="primary" showWhen="ios">
+          Abbrechen
+        </span>
+        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button (click)="done()" [disabled]="!isReadyToSave" strong>
+        <span color="primary" showWhen="ios">
+          Speichern
+        </span>
+        <ion-icon name="md-checkmark" showWhen="core,android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form *ngIf="form" [formGroup]="form">
+    <ion-item>
+      <ion-input type="text" placeholder="Name der Session" formControlName="name"></ion-input>
+    </ion-item>
+  </form>
+  <ion-list>
+    <ion-list-header>Spieler</ion-list-header>
+    <ion-item *ngFor="let player of players" text-wrap>
+      <ion-avatar item-start (click)="showPlayer(player.id)">
+        <img [src]="player.picture"/>
+      </ion-avatar>
+      <ion-label>{{player.name}}: {{player.motto}}</ion-label>
+      <ion-checkbox item-end [(ngModel)]="player.selected"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+</ion-content>
