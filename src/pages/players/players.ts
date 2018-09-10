@@ -82,12 +82,30 @@ export class PlayersPage {
   }
 
   logout(){
-    this.auth.signOut().then(() => {
-      this.navCtrl.push(WelcomePage);
-    }) .catch(() => {
-      this.navCtrl.push(WelcomePage);
-    })
+    let alert = this.alertCtrl.create({
+      title: 'Ausloggen',
+      message: 'Sicher, dass du dich ausloggen willst?',
+      buttons: [
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          handler: () => {
+            console.log('Logout cancelled');
+          }
+        },
+        {
+          text: 'Ausloggen',
+          handler: () => {
+            console.log('Logout confirmed');
+            this.auth.signOut().then(() => {
+              this.navCtrl.push(WelcomePage);
+            }) .catch(() => {
+              this.navCtrl.push(WelcomePage);
+            });
+          }
+        }
+      ]});
+    alert.present();
   }
-
 
 }

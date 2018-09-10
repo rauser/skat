@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
+import {AlertController, IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
 import {AuthProvider} from "../../providers/auth/auth";
 import {WelcomePage} from "../welcome/welcome";
 import {AngularFirestore} from 'angularfire2/firestore';
@@ -19,6 +19,7 @@ export class SessionsPage {
   constructor(public navCtrl: NavController,
               public auth: AuthProvider,
               public modalCtrl: ModalController,
+              public alertCtrl: AlertController,
               private fireStore: AngularFirestore) {
   }
 
@@ -64,11 +65,30 @@ export class SessionsPage {
   }
 
   logout(){
-    this.auth.signOut().then(() => {
-      this.navCtrl.push(WelcomePage);
-    }) .catch(() => {
-      this.navCtrl.push(WelcomePage);
-    })
+    let alert = this.alertCtrl.create({
+      title: 'Ausloggen',
+      message: 'Sicher, dass du dich ausloggen willst?',
+      buttons: [
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          handler: () => {
+            console.log('Logout cancelled');
+          }
+        },
+        {
+          text: 'Ausloggen',
+          handler: () => {
+            console.log('Logout confirmed');
+            this.auth.signOut().then(() => {
+              this.navCtrl.push(WelcomePage);
+            }) .catch(() => {
+              this.navCtrl.push(WelcomePage);
+            });
+          }
+        }
+      ]});
+    alert.present();
   }
 
 }
