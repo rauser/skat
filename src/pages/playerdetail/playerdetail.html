@@ -6,11 +6,67 @@
 
 
 <ion-content padding>
-  <div class="item-profile" text-center>
+  <ion-item text-center>
     <img src={{picture}}>
-  </div>
+  </ion-item>
 
-  <div class="item-detail" padding text-wrap>
-    <h4>Motto: {{motto}}</h4>
-  </div>
+  <ion-item text-wrap>
+    <h2><b>Motto:</b> {{motto}}</h2>
+  </ion-item>
+
+  <ion-item>
+    <h2><b>Statistik (ohne Ramsch):</b></h2>
+    <ion-grid text-wrap>
+      <ion-row>
+        <ion-col col-9>Spiele: </ion-col>
+        <ion-col col-3>
+          <b>{{ totalgames }}</b>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-9>Gesamtpunkte: </ion-col>
+        <ion-col col-3>
+          <b>{{ totalpoints}}</b>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-9>Durschnittspunkte pro Spiel: </ion-col>
+        <ion-col col-3>
+          <b>{{ (totalpoints/totalgames) | number:'1.2-2' }}</b>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-5><b>Kategorie</b></ion-col>
+        <ion-col col-7><b>Spiele (Gewinnquote)</b></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-5>Kreuz</ion-col>
+        <ion-col col-7>{{kreuzgames}} ({{(kreuzgameswon/kreuzgames)*100 | number:'1.2-2' }} %)</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-5>Pik</ion-col>
+        <ion-col col-7>{{pikgames}} ({{(pikgameswon/pikgames)*100 | number:'1.2-2' }} %)</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-5>Herz</ion-col>
+        <ion-col col-7>{{herzgames}} ({{(herzgameswon/herzgames)*100 | number:'1.2-2' }} %)</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-5>Karo</ion-col>
+        <ion-col col-7>{{karogames}} ({{(karogameswon/karogames)*100 | number:'1.2-2' }} %)</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-5>Grand</ion-col>
+        <ion-col col-7>{{grandgames}} ({{(grandgameswon/grandgames)*100 | number:'1.2-2' }} %)</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-5>Null</ion-col>
+        <ion-col col-7>{{nullgames}} ({{(nullgameswon/nullgames)*100 | number:'1.2-2' }} %)</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-5><b>Gesamt</b></ion-col>
+        <ion-col col-7><b>{{totalgames}} ({{(totalgameswon/totalgames)*100 | number:'1.2-2' }} %)</b></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
 </ion-content>

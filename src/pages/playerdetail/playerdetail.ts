@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {AngularFirestore} from 'angularfire2/firestore';
+import {VariousProvider} from "../../providers/various/various";
 
 @IonicPage()
 @Component({
@@ -17,8 +18,32 @@ export class PlayerdetailPage {
   sessions: any[] = [];
   games: any[] = [];
 
+  totalpoints: number = 0;
+  totalgames: number = 0;
+  totalgameswon: number = 0;
+  lostgamepoints: number = 0;
+  wongamepoints: number = 0;
+  bubenmitgames: number = 0;
+  bubgenohnegames: number = 0;
+  bubenmitcounter: number = 0;
+  bubenohnecounter: number = 0;
+  kreuzgames: number = 0;
+  pikgames: number = 0;
+  herzgames: number = 0;
+  karogames: number = 0;
+  grandgames: number = 0;
+  nullgames: number = 0;
+  kreuzgameswon: number = 0;
+  pikgameswon: number = 0;
+  herzgameswon: number = 0;
+  karogameswon: number = 0;
+  grandgameswon: number = 0;
+  nullgameswon: number = 0;
+
+
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
+              public varProv: VariousProvider,
               private fireStore: AngularFirestore) {
   }
 
@@ -53,7 +78,7 @@ export class PlayerdetailPage {
       console.log(this.sessions);
       this.loadGames();
     }).catch(() => {
-      this.loadSessions();
+      this.varProv.showToast('Statistik kann nicht geladen werden');
     });
   }
 
@@ -82,7 +107,10 @@ export class PlayerdetailPage {
     }
     Promise.all(promises).then(()=> {
       console.log(this.games);
-    })
+      this.calculateStatistics();
+    }).catch(() => {
+      this.varProv.showToast('Statistik kann nicht geladen werden');
+    });
   }
 
   addGames(session: string){
@@ -103,4 +131,70 @@ export class PlayerdetailPage {
 
   }
 
+  calculateStatistics(){
+    this.totalpoints = 0;
+    this.totalgames = 0;
+    this.totalgameswon = 0;
+    this.lostgamepoints = 0;
+    this.wongamepoints = 0;
+    this.bubenmitgames = 0;
+    this.bubgenohnegames = 0;
+    this.bubenmitcounter = 0;
+    this.bubenohnecounter = 0;
+    this.kreuzgames = 0;
+    this.pikgames = 0;
+    this.herzgames = 0;
+    this.karogames = 0;
+    this.grandgames = 0;
+    this.nullgames = 0;
+    this.kreuzgameswon = 0;
+    this.pikgameswon = 0;
+    this.herzgameswon = 0;
+    this.karogameswon = 0;
+    this.grandgameswon = 0;
+    this.nullgameswon = 0;
+    for(let game of this.games){
+      if(game.gameid == 7) continue;
+      this.totalgames++;
+      this.totalpoints += game.points;
+      if(!game.lost){
+        this.totalgameswon++;
+        this.wongamepoints += game.points;
+      }
+      if(game.gameid == 4){
+        this.kreuzgames++;
+        if(!game.lost) this.kreuzgameswon++;
+      }
+      if(game.gameid == 3){
+        this.pikgames++;
+        if(!game.lost) this.pikgameswon++;
+      }
+      if(game.gameid == 2){
+        this.herzgames++;
+        if(!game.lost) this.herzgameswon++;
+      }
+      if(game.gameid == 1){
+        this.karogames++;
+        if(!game.lost) this.karogameswon++;
+      }
+      if(game.gameid == 5){
+        this.grandgames++;
+        if(!game.lost) this.grandgameswon++;
+      }
+      if(game.gameid == 6){
+        this.nullgames++;
+        if(!game.lost) this.nullgameswon++;
+      }
+      if(game.gameid < 6){
+        if(game.mit){
+          this.bubenmitgames++;
+          this.bubenmitcounter += game.buben;
+        }
+        else{
+          this.bubgenohnegames++;
+          this.bubenohnecounter += game.buben;
+        }
+      }
+    }
+  }
 }
