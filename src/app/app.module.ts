@@ -20,7 +20,6 @@ import {CreatesessionPageModule} from "../pages/createsession/createsession.modu
 import {SessiondetailPageModule} from "../pages/sessiondetail/sessiondetail.module";
 import {PlayersPageModule} from "../pages/players/players.module";
 import {PlayerdetailPageModule} from "../pages/playerdetail/playerdetail.module";
-import {StatisticsPageModule} from "../pages/statistics/statistics.module";
 import {VariousProvider} from "../providers/various/various";
 
 @NgModule({
@@ -41,7 +40,6 @@ import {VariousProvider} from "../providers/various/various";
     SessiondetailPageModule,
     PlayersPageModule,
     PlayerdetailPageModule,
-    StatisticsPageModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [

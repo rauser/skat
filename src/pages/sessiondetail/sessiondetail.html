@@ -79,8 +79,24 @@
     <ion-label>Offen</ion-label>
   </ion-item>
   <ion-item *ngIf="game.gameid == 7" text-wrap>
-    <ion-label stacked>Negativpunkte</ion-label>
-    <ion-input type="text" [(ngModel)]="game.points"></ion-input>
+    <h2>Negativpunkte betragsmäßig eintragen</h2>
+    <p>Trage einen Durchmarsch als Grand mit 4 ein...</p>
+  </ion-item>
+  <ion-item *ngIf="game.gameid == 7" text-wrap>
+    <ion-label>{{session.player1name}}</ion-label>
+    <ion-input type="number" [(ngModel)]="game.player1points"></ion-input>
+  </ion-item>
+  <ion-item *ngIf="game.gameid == 7" text-wrap>
+    <ion-label>{{session.player2name}}</ion-label>
+    <ion-input type="number" [(ngModel)]="game.player2points"></ion-input>
+  </ion-item>
+  <ion-item *ngIf="game.gameid == 7" text-wrap>
+    <ion-label>{{session.player3name}}</ion-label>
+    <ion-input type="number" [(ngModel)]="game.player3points"></ion-input>
+  </ion-item>
+  <ion-item *ngIf="game.gameid == 7 && session.player4id" text-wrap>
+    <ion-label>{{session.player4name}}</ion-label>
+    <ion-input type="number" [(ngModel)]="game.player4points"></ion-input>
   </ion-item>
   <ion-item *ngIf="game.gameid < 7">
     <ion-checkbox [(ngModel)]="game.lost" (ionChange)="calculatePoints()"></ion-checkbox>
@@ -89,22 +105,22 @@
   <ion-item *ngIf="game.gameid < 6" text-wrap>
     <h2>Grundwert: {{game.value}}, Multiplikator: <b>{{game.multiplier}}</b>, Punkte: <b>{{game.points}}</b></h2>
   </ion-item>
-  <ion-item *ngIf="game.gameid > 5" text-wrap>
+  <ion-item *ngIf="game.gameid == 6" text-wrap>
     <h2>Punkte: <b>{{game.points}}</b></h2>
   </ion-item>
   <button ion-button full color="secondary" (click)="saveGame()"
-          [disabled]="!game.playerid || !game.gameid || (game.gameid < 6 && !game.buben)">
+          [disabled]="(!game.playerid || !game.gameid || (game.gameid < 6 && !game.buben)) && (game.gameid != 7)">
     Speichern
   </button>
   <button ion-button full color="primary" *ngIf="!showpastgames" (click)="showPastGames()">Spiele anzeigen ({{gamescounter}})</button>
   <button ion-button full color="danger" *ngIf="showpastgames" (click)="showPastGames()">Spiele verbergen ({{gamescounter}})</button>
   <ion-list *ngIf="this.showpastgames">
     <ion-item *ngFor="let pastgame of this.pastgames" text-wrap>
-      <ion-avatar item-start>
+      <ion-avatar item-start *ngIf="pastgame.gameid < 7">
         <img [src]="pastgame.img">
       </ion-avatar>
-      <h2><b>{{pastgame.player}}, {{pastgame.game}}: {{pastgame.points}}</b></h2>
-      <p>
+      <h2 *ngIf="pastgame.gameid < 7"><b>{{pastgame.player}}, {{pastgame.game}}: {{pastgame.points}}</b></h2>
+      <p *ngIf="pastgame.gameid < 7">
         <b *ngIf="pastgame.gameid<6 && pastgame.mit">mit {{pastgame.buben}},</b>
         <b *ngIf="pastgame.gameid<6 && !pastgame.mit">ohne {{pastgame.buben}},</b>
         <b *ngIf="pastgame.gameid<6 && pastgame.schneider">schneider,</b>
@@ -115,6 +131,41 @@
         <b *ngIf="pastgame.gameid<7 && pastgame.hand">hand,</b>
         <b *ngIf="pastgame.gameid<7 && pastgame.lost">verloren</b>
       </p>
+      <h2 *ngIf="pastgame.gameid == 7"><b>{{pastgame.game}}</b></h2>
+      <ion-grid *ngIf="pastgame.gameid == 7">
+        <ion-row>
+          <ion-col col-6>
+            <b>{{session.player1name}}</b>
+          </ion-col>
+          <ion-col col-6>
+            <b>{{pastgame.player1points}}</b>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-6>
+            <b>{{session.player2name}}</b>
+          </ion-col>
+          <ion-col col-6>
+            <b>{{pastgame.player2points}}</b>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-6>
+            <b>{{session.player3name}}</b>
+          </ion-col>
+          <ion-col col-6>
+            <b>{{pastgame.player3points}}</b>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="session.player4id">
+          <ion-col col-6>
+            <b>{{session.player4name}}</b>
+          </ion-col>
+          <ion-col col-6>
+            <b>{{pastgame.player4points}}</b>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
       <p>{{pastgame.datetime}}</p>
       <ion-icon name="trash" color="danger" item-end (click)="removeGame(pastgame.id)"></ion-icon>
     </ion-item>

@@ -26,9 +26,6 @@ export interface Jacks{
 })
 export class SessiondetailPage {
 
-
-  //TODO: Ramsch implementieren, Reh etc...
-
   session: any = {};
   sessionid: string;
 
@@ -84,6 +81,10 @@ export class SessiondetailPage {
     lost: boolean,
     datetime: string,
     datetimeiso: string,
+    player1points: number,
+    player2points: number,
+    player3points: number,
+    player4points: number,
   } = {
     playerid: 0,
     player: '',
@@ -104,6 +105,10 @@ export class SessiondetailPage {
     lost: false,
     datetime: '',
     datetimeiso: '',
+    player1points: 0,
+    player2points: 0,
+    player3points: 0,
+    player4points: 0,
   };
 
   constructor(public navCtrl: NavController,
@@ -178,14 +183,15 @@ export class SessiondetailPage {
     this.player3points = 0;
     this.player4points = 0;
     for(let game of this.pastgames){
-      if(game.id != 7){
-        this.gamescounter++;
+      this.gamescounter++;
+      if(game.gameid != 7){
         if(game.playerid == this.session.player1id)  this.player1points += game.points;
         else if(game.playerid == this.session.player2id)  this.player2points += game.points;
         else if(game.playerid == this.session.player3id)  this.player3points += game.points;
         else if(game.playerid == this.session.player4id)  this.player4points += game.points;
       }
       else {
+        console.log(game);
         if(game.player1points) this.player1points += game.player1points;
         if(game.player2points) this.player2points += game.player2points;
         if(game.player3points) this.player3points += game.player3points;
@@ -289,11 +295,12 @@ export class SessiondetailPage {
 
   saveGame(){
     this.calculatePoints();
-    if(this.game.gameid == 7){
-      this.game.points *= -1;
-    }
     this.game.datetimeiso = new Date().toISOString();
     this.game.datetime = new Date().toLocaleString('de-DE');
+    this.game.player1points *= -1;
+    this.game.player2points *= -1;
+    this.game.player3points *= -1;
+    this.game.player4points *= -1;
     console.log(this.game);
     this.fireStore.collection<any>('sessions/'+this.sessionid+'/games').add(this.game).then(() => {
       this.varProv.showToast('Spiel gespeichert');
@@ -316,6 +323,10 @@ export class SessiondetailPage {
       this.game.lost = false;
       this.game.datetime = '';
       this.game.datetimeiso = '';
+      this.game.player1points = 0;
+      this.game.player2points = 0;
+      this.game.player3points = 0;
+      this.game.player4points = 0;
       for(let game of this.games)
         game.selected = false;
       for(let jack of this.jacks)
